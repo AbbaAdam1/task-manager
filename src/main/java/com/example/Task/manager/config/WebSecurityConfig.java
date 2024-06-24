@@ -17,9 +17,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                //security permits
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/users").permitAll()
+                        .requestMatchers("/tasks").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
