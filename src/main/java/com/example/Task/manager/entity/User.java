@@ -1,23 +1,59 @@
 package com.example.Task.manager.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String email;
     private String name;
     private String role;
 
-    // Getters and setters
+    @ManyToMany(mappedBy = "users")
+    private List<Task> tasks;
+}
+
+/*
+package com.example.Task.manager.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.List;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String email;
+    private String name;
+    private String role;
+
+    //@OneToMany(mappedBy = "createdBy")
+    //private List<Task> createdTasks;
+
+    //@OneToMany(mappedBy = "assignedTo")
+    //private List<Task> assignedTasks;
+
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -43,10 +79,11 @@ public class User {
     }
 
     public String getRole() {
-        return name;
+        return role;
     }
 
-    public void setRole(String name) {
-        this.name = name;
+    public void setRole(String role) {
+        this.role = role;
     }
 }
+*/
