@@ -20,7 +20,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public Task getTaskById(@PathVariable Integer id) {
         return taskService.getTaskById(id);
     }
 
@@ -30,16 +30,16 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
+    public Task updateTask(@PathVariable Integer id, @RequestBody Task taskDetails) {
         return taskService.updateTask(id, taskDetails);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
+    public void deleteTask(@PathVariable Integer id) {
         taskService.deleteTask(id);
     }
     @PostMapping("/{taskId}/assign/{userId}")
-    public void assignTaskToUser(@PathVariable Long taskId, @PathVariable Long userId) {
+    public void assignTaskToUser(@PathVariable Integer taskId, @PathVariable Integer userId) {
         taskService.assignTaskToUser(taskId, userId);
     }
 }

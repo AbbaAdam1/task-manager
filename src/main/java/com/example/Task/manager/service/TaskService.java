@@ -22,7 +22,7 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public Task getTaskById(Long id) {
+    public Task getTaskById(Integer id) {
         return taskRepository.findById(id).orElse(null);
     }
 
@@ -30,7 +30,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Long id, Task taskDetails) {
+    public Task updateTask(Integer id, Task taskDetails) {
         Task task = taskRepository.findById(id).orElse(null);
         if (task != null) {
             task.setName(taskDetails.getName());
@@ -42,11 +42,11 @@ public class TaskService {
         }
     }
 
-    public void deleteTask(Long id) {
+    public void deleteTask(Integer id) {
         taskRepository.deleteById(id);
     }
 
-    public void assignTaskToUser(Long taskId, Long userId) {
+    public void assignTaskToUser(Integer taskId, Integer userId) {
         Task task = taskRepository.findById(taskId).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
         if (task != null && user != null) {
