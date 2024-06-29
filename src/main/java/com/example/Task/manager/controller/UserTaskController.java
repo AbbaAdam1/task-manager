@@ -1,6 +1,8 @@
 package com.example.Task.manager.controller;
 
 import com.example.Task.manager.entity.UserTask;
+import com.example.Task.manager.entity.Task;
+import com.example.Task.manager.service.TaskService;
 import com.example.Task.manager.service.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +19,9 @@ public class UserTaskController {
 
     @Autowired
     private UserTaskService userTaskService;
+
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping("/user")
     public String getUserTasksByLoggedInUser(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -40,17 +45,25 @@ public class UserTaskController {
     }
 
     @PostMapping("/create")
-    public String createUserTask(@ModelAttribute UserTask userTask) {
-        userTaskService.assignTaskToUser(userTask);
+    public String createUserTask(@ModelAttribute UserTask userTask, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+
+        // Ensure task is saved before assigning it to userTask
+        Task task = userTask.getTask();
+        if (task.getId() == null) { // Check if task is already saved
+            taskService.createTask(task); // Save task if not already saved
+        }
+
+        userTaskService.assignTaskToCurrentUser(userTask, username);
         return "redirect:/tasks-view";
     }
 
     @GetMapping("/edit/{id}")
     public String editUserTaskForm(@PathVariable Integer id, Model model) {
-        UserTask userTask = userTaskService.getUserTaskById(id);
+        UserTask userTask = userTaskService.getUserTaskByIdWithTask(id);
         if (userTask != null) {
             model.addAttribute("userTask", userTask);
-            return "task-form"; // Ensure this view exists in your templates
+            return "edit-task-form"; // Ensure this view exists in your templates
         } else {
             return "redirect:/tasks-view";
         }
@@ -58,7 +71,7 @@ public class UserTaskController {
 
     @PostMapping("/update/{id}")
     public String updateUserTask(@PathVariable Integer id, @ModelAttribute UserTask userTaskDetails) {
-        userTaskService.assignTaskToUser(userTaskDetails); // Assuming the service method handles updates as well
+        userTaskService.updateUserTask(id, userTaskDetails);
         return "redirect:/tasks-view";
     }
 

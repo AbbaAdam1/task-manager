@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add New Task</title>
+    <title>Edit Task</title>
 </head>
 <body>
-<h1>Add New Task</h1>
-<form th:action="@{/tasks-view/create}" th:object="${userTask}" method="post">
+<h1>Edit Task</h1>
+<form th:action="@{/tasks-view/update/{id}(id=${userTask.id})}" th:object="${userTask}" method="post">
+    <input type="hidden" th:field="*{id}" /> <!-- Ensure the UserTask ID is included -->
+    <input type="hidden" th:field="*{task.id}" /> <!-- Ensure the Task ID is included -->
     <div>
         <label for="taskName">Task Name:</label>
         <input type="text" id="taskName" th:field="*{task.name}" required />
@@ -14,7 +16,8 @@
         <label for="taskDescription">Task Description:</label>
         <input type="text" id="taskDescription" th:field="*{task.description}" required />
     </div>
-    <button type="submit">Submit</button>
+    <!-- Other fields as needed -->
+    <button type="submit">Update Task</button>
 </form>
 </body>
 </html>

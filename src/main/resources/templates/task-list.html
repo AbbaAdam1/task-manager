@@ -8,17 +8,17 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>User</th>
         <th>Task</th>
+        <th>Description</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="userTask : ${userTasks}">
-        <td th:text="${userTask.id}">1</td>
         <td th:text="${userTask.user.username}">Sample User</td>
         <td th:text="${userTask.task.name}">Sample Task</td>
+        <td th:text="${userTask.task.description}">Sample Description</td>
         <td>
             <a th:href="@{/tasks-view/delete/{id}(id=${userTask.id})}">Remove</a>
             <a th:href="@{/tasks-view/edit/{id}(id=${userTask.id})}">Edit</a>
