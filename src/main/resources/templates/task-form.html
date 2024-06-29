@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head>
+    <title>Task Form</title>
+</head>
+<body>
+<h1 th:text="${task.id} == null ? 'Create Task' : 'Edit Task'"></h1>
+<form th:action="@{${task.id} == null ? '/tasks' : '/tasks/update/' + ${task.id}}" th:object="${task}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+    <br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" th:field="*{description}" required>
+    <br>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/tasks}">Back to Task List</a>
+</body>
+</html>

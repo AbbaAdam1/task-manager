@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Task List</title>
+</head>
+<body>
+<h1>User Tasks</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Task</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="userTask : ${userTasks}">
+        <td th:text="${userTask.id}">1</td>
+        <td th:text="${userTask.user.username}">Sample User</td>
+        <td th:text="${userTask.task.name}">Sample Task</td>
+        <td>
+            <a th:href="@{/tasks-view/delete/{id}(id=${userTask.id})}">Remove</a>
+            <a th:href="@{/tasks-view/edit/{id}(id=${userTask.id})}">Edit</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/tasks-view/new}">Add New Task</a>
+</body>
+</html>
