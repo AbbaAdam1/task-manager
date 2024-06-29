@@ -1,7 +1,9 @@
 package com.example.Task.manager.service;
 
+import com.example.Task.manager.entity.Task;
 import com.example.Task.manager.entity.User;
 import com.example.Task.manager.entity.UserTask;
+import com.example.Task.manager.repository.TaskRepository;
 import com.example.Task.manager.repository.UserRepository;
 import com.example.Task.manager.repository.UserTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class UserTaskService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     public List<UserTask> getAllUserTasks() {
         return userTaskRepository.findAll();
@@ -50,5 +55,52 @@ public class UserTaskService {
     public UserTask getUserTaskById(Integer id) {
         Optional<UserTask> userTaskOptional = userTaskRepository.findById(id);
         return userTaskOptional.orElse(null);
+    }
+
+    public UserTask getUserTaskByIdWithTask(Integer id) {
+        Optional<UserTask> userTaskOptional = userTaskRepository.findById(id);
+        if (userTaskOptional.isPresent()) {
+            UserTask userTask = userTaskOptional.get();
+            Task task = taskRepository.findById(userTask.getTask().getId()).orElse(null);
+            userTask.setTask(task);
+            return userTask;
+        }
+        return null;
+    }
+
+    /*
+    public void updateUserTask(Integer id, UserTask userTaskDetails) {
+        Optional<UserTask> userTaskOptional = userTaskRepository.findById(id);
+        if (userTaskOptional.isPresent()) {
+            UserTask userTask = userTaskOptional.get();
+            userTask.setTask(userTaskDetails.getTask());
+            userTaskRepository.save(userTask);
+        }
+    }
+    */
+
+    //actually does the update process
+    public UserTask updateUserTask(Integer id, UserTask userTaskDetails) {
+        Optional<UserTask> optionalUserTask = userTaskRepository.findById(id);
+        if (optionalUserTask.isPresent()) {
+            UserTask existingUserTask = optionalUserTask.get();
+            // Update relevant fields of existingUserTask with userTaskDetails
+            Task task = existingUserTask.getTask();
+            task.setName(userTaskDetails.getTask().getName());
+            task.setDescription(userTaskDetails.getTask().getDescription());
+            // Set other fields as needed
+            return userTaskRepository.save(existingUserTask);
+        }
+        return null;  // Or throw an exception if task is not found
+    }
+
+
+    public UserTask assignTaskToCurrentUser(UserTask userTask, String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            userTask.setUser(user);
+            return userTaskRepository.save(userTask);
+        }
+        return null;  // Or throw an exception if user is not found
     }
 }
