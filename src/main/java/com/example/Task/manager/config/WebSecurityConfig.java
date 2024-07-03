@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/users").permitAll()
                         .requestMatchers("/tasks").permitAll()
+                        .requestMatchers("/admin-tasks-view/**").hasAuthority("ADMIN") // Adjusted for plain string roles
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -48,7 +49,7 @@ public class WebSecurityConfig {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())
-                    .roles(user.getRole())
+                    .authorities(user.getRole()) // Use authorities instead of roles
                     .build();
         }).passwordEncoder(passwordEncoder());
     }
