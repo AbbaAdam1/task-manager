@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Task List</title>
+    <title>User List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,7 +60,6 @@
             color: #fff;
             border-radius: 4px;
             transition: background-color 0.3s;
-            margin-bottom: 10px; /* Added margin for spacing */
         }
 
         .btn:hover {
@@ -71,36 +70,29 @@
 <body>
 <a th:href="@{/}" class="btn">Return to Home Page</a>
 
-<h1>Task List</h1>
-<!-- Check if the userTasks list is empty -->
-<div th:if="${#lists.isEmpty(userTasks)}">
-    <p>No tasks available.</p>
-</div>
+<h1>User List</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over users and display each user -->
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.role}"></td>
+        <!-- Link to view user's tasks -->
+        <td><a th:href="@{/admin-tasks-view/users/{userId}(userId=${user.id})}">View Tasks</a></td>
+    </tr>
+    </tbody>
+</table>
 
-<!-- Display the task table if userTasks is not empty -->
-<div th:if="${!#lists.isEmpty(userTasks)}">
-    <table>
-        <thead>
-        <tr>
-            <th>Task Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Iterate over userTasks and display each task -->
-        <tr th:each="task : ${userTasks}">
-            <td th:text="${task.task.name}"></td>
-            <td th:text="${task.task.description}"></td>
-            <td>
-                <a th:href="@{/tasks-view/edit/{id}(id=${task.id})}">Edit</a>
-                <a th:href="@{/tasks-view/delete/{id}(id=${task.id})}">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<a th:href="@{/tasks-view/new}" class="btn">Add New Task</a>
-
+<!-- Button to go to Add User form -->
+<a th:href="@{/admin-tasks-view/users/add}" class="btn">Add New User</a>
 </body>
 </html>
