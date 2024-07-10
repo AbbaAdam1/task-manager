@@ -60,10 +60,21 @@
             color: #fff;
             border-radius: 4px;
             transition: background-color 0.3s;
+            margin-bottom: 10px;
         }
 
         .btn:hover {
             background-color: #004999;
+        }
+
+        .delete-btn {
+            background-color: #cc0000;
+            margin-bottom: 0px;
+            padding: 0px 0px;
+        }
+
+        .delete-btn:hover {
+            background-color: #990000;
         }
     </style>
 </head>
@@ -81,18 +92,21 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Iterate over users and display each user -->
     <tr th:each="user : ${users}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.role}"></td>
-        <!-- Link to view user's tasks -->
-        <td><a th:href="@{/admin-tasks-view/users/{userId}(userId=${user.id})}">View Tasks</a></td>
+        <td>
+            <a th:href="@{/admin-tasks-view/users/{userId}(userId=${user.id})}">View Tasks</a>
+            <form th:action="@{/admin-tasks-view/users/delete/{userId}(userId=${user.id})}" method="post" th:object="${user}" style="display:inline;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="btn delete-btn" th:if="${user.role} != 'ADMIN'">Delete User</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
 
-<!-- Button to go to Add User form -->
 <a th:href="@{/admin-tasks-view/users/add}" class="btn">Add New User</a>
 </body>
 </html>

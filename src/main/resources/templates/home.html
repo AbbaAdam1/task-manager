@@ -54,10 +54,9 @@
 <body>
 <h1>Welcome!</h1>
 
-<div sec:authorize="hasRole('ADMIN')">
+<div th:if="${currentUser.role} == 'ADMIN'">
     <a th:href="@{/admin-tasks-view/users}" class="btn">Manage Users</a>
 </div>
-
 <a th:href="@{/tasks-view}" class="btn">View My Tasks</a>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out" />

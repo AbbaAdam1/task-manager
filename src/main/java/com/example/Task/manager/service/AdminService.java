@@ -1,9 +1,11 @@
 package com.example.Task.manager.service;
 
+import com.example.Task.manager.entity.Task;
 import com.example.Task.manager.entity.User;
 import com.example.Task.manager.entity.UserTask;
 import com.example.Task.manager.repository.UserRepository;
 import com.example.Task.manager.repository.UserTaskRepository;
+import com.example.Task.manager.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,10 @@ public class AdminService {
     @Autowired
     private UserTaskRepository userTaskRepository;
 
-    //gets all users
+    @Autowired
+    private TaskRepository taskRepository;
+
+    // Gets all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -48,14 +53,23 @@ public class AdminService {
         userRepository.deleteById(id);
     }
 
-   //gets a users tasks by their id
+    // Gets a user's tasks by their id
     public List<UserTask> getUserTasksByUserId(Integer userId) {
         return userTaskRepository.findByUserId(userId);
     }
 
-    //check if admin
+    // Check if admin
     public boolean isAdmin(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.map(value -> "ADMIN".equals(value.getRole())).orElse(false);
+    }
+
+    public void saveUserTask(UserTask userTask) {
+        // Check if the Task is new and needs saving
+        Task task = userTask.getTask();
+        if (task != null && task.getId() == null) {
+            taskRepository.save(task); // Save the Task
+        }
+        userTaskRepository.save(userTask); // Save the UserTask
     }
 }

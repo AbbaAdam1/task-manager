@@ -101,6 +101,7 @@
     </table>
 </div>
 <a th:href="@{/tasks-view/new}" class="btn">Add New Task</a>
+<a th:if="${isAdmin}" th:href="@{/admin-tasks-view/add-task/{id}(id=${id})}">Add New Task for User</a>
 
 </body>
 </html>
