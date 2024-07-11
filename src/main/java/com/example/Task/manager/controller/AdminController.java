@@ -5,6 +5,7 @@ import com.example.Task.manager.entity.User;
 import com.example.Task.manager.entity.UserTask;
 import com.example.Task.manager.service.AdminService;
 import com.example.Task.manager.service.UserService;
+import com.example.Task.manager.service.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,10 +26,13 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserTaskService userTaskService;
+
     //sends user list to admin user page
     @GetMapping("/users")
     public String getAllUsers(Model model) {
-        List<User> users = adminService.getAllUsers();
+        List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user-list"; // Ensure this view exists in your templates
     }
@@ -36,10 +40,10 @@ public class AdminController {
     // fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Optional<User> user = adminService.getUserById(id);
+        Optional<User> user = userService.getUserById(id);
         if (user.isPresent()) {
             // fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
-            List<UserTask> userTasks = adminService.getUserTasksByUserId(id);
+            List<UserTask> userTasks = userTaskService.getUserTasksByUserId(id);
             boolean isAdmin = adminService.isAdmin(userDetails.getUsername());
             model.addAttribute("userTasks", userTasks);
             model.addAttribute("userId", id); // Add userId to the model
@@ -68,7 +72,7 @@ public class AdminController {
     public String saveUserTask(@ModelAttribute("userTask") UserTask userTask, @RequestParam Integer id) {
         // Logic to save the userTask
         userTask.setId(id); // Ensure the userId is set
-        adminService.saveUserTask(userTask); // Save the userTask using the service
+        userTaskService.saveUserTask(userTask); // Save the userTask using the service
         return "redirect:/admin-tasks-view/users/" + id; // Redirect to the user's task list
     }
 
@@ -89,7 +93,7 @@ public class AdminController {
     public String getUserTasksById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
         boolean isAdmin = adminService.isAdmin(username);
-        List<UserTask> userTasks = adminService.getUserTasksByUserId(id);
+        List<UserTask> userTasks = userTaskService.getUserTasksByUserId(id);
         model.addAttribute("userTasks", userTasks);
         model.addAttribute("isAdmin", isAdmin);
         return "task-list"; // Ensure this view exists in your templates
@@ -112,15 +116,14 @@ public class AdminController {
     //update mapping
     @PutMapping("/users/{id}")
     public String updateUser(@PathVariable Integer id, @ModelAttribute User userDetails) {
-        adminService.updateUser(id, userDetails);
+        userService.updateUser(id, userDetails);
         return "redirect:/admin-tasks-view/users";
     }
 
     //delete mapping
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Integer id) {
-        adminService.deleteUser(id);
+        userService.deleteUser(id);
         return "redirect:/admin-tasks-view/users";
     }
-
 }
