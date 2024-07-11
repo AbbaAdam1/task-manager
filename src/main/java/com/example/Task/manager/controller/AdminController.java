@@ -25,6 +25,7 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    //sends user list to admin user page
     @GetMapping("/users")
     public String getAllUsers(Model model) {
         List<User> users = adminService.getAllUsers();
@@ -32,6 +33,7 @@ public class AdminController {
         return "user-list"; // Ensure this view exists in your templates
     }
 
+    // fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Optional<User> user = adminService.getUserById(id);
@@ -49,6 +51,8 @@ public class AdminController {
         }
     }
 
+    //for creating a new task for an admin
+    /*
     @GetMapping("/users/{id}/create")
     public String createTaskForm(@PathVariable Integer id, Model model) {
         Optional<User> user = adminService.getUserById(id);
@@ -58,6 +62,7 @@ public class AdminController {
         model.addAttribute("id", id); // Add the userId to the model
         return "admin-task-form"; // Ensure this view exists in your templates
     }
+     */
 
     @PostMapping("/users/{id}/create")
     public String saveUserTask(@ModelAttribute("userTask") UserTask userTask, @RequestParam Integer id) {
@@ -65,21 +70,6 @@ public class AdminController {
         userTask.setId(id); // Ensure the userId is set
         adminService.saveUserTask(userTask); // Save the userTask using the service
         return "redirect:/admin-tasks-view/users/" + id; // Redirect to the user's task list
-    }
-
-    ///
-    @GetMapping("/user-list")
-    public String getUserList(Model model) {
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "user-list";
-    }
-
-    @GetMapping("/select-user")
-    public String showSelectUserForm(Model model) {
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "select-user";
     }
 
     @GetMapping("/add-task/{id}")
@@ -93,15 +83,6 @@ public class AdminController {
         model.addAttribute("task", new Task());
         return "admin-task-form";
     }
-
-    /*
-    @PostMapping("/save-task")
-    public String saveTask(@ModelAttribute Task task) {
-        // Save task logic
-        return "redirect:/user-list";
-    }
-
-     */
     ///
 
     @GetMapping("/users/{id}/tasks")
@@ -114,24 +95,28 @@ public class AdminController {
         return "task-list"; // Ensure this view exists in your templates
     }
 
+    //mapping for adding a new user
     @GetMapping("/users/add")
     public String showAddUserForm(Model model) {
         model.addAttribute("user", new User());
         return "add-user"; // Ensure this view exists in your templates
     }
 
+    //post mapping for adding a user
     @PostMapping("/users/add")
     public String addUser(@ModelAttribute("user") User user) {
         userService.createUser(user);
         return "redirect:/admin-tasks-view/users"; // Redirect to the user list or another appropriate page
     }
 
+    //update mapping
     @PutMapping("/users/{id}")
     public String updateUser(@PathVariable Integer id, @ModelAttribute User userDetails) {
         adminService.updateUser(id, userDetails);
         return "redirect:/admin-tasks-view/users";
     }
 
+    //delete mapping
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Integer id) {
         adminService.deleteUser(id);

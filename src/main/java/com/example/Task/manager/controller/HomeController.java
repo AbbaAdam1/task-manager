@@ -17,6 +17,7 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+    //get mapping to send user data to home page to check for admin
     @GetMapping("/")
     public String homePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Optional<User> currentUserOptional = userService.getUserByUsername(userDetails.getUsername());
