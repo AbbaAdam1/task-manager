@@ -94,5 +94,14 @@ public class UserTaskService {
         }
         return null;  // Or throw an exception if user is not found
     }
+
+    public void saveUserTask(UserTask userTask) {
+        // Check if the Task is new and needs saving
+        Task task = userTask.getTask();
+        if (task != null && task.getId() == null) {
+            taskRepository.save(task); // Save the Task
+        }
+        userTaskRepository.save(userTask); // Save the UserTask
+    }
 }
 

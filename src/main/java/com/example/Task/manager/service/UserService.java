@@ -26,7 +26,23 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateUser(Integer id, User userDetails) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User existingUser = userOptional.get();
+            existingUser.setUsername(userDetails.getUsername());
+            existingUser.setPassword(userDetails.getPassword());
+            existingUser.setRole(userDetails.getRole());
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
+
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

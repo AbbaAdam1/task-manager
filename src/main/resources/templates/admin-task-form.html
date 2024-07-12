@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spring Security</title>
-  <style>
+    <meta charset="UTF-8">
+    <title>Add New Task for User</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
-            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         form {
@@ -18,19 +23,17 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: 300px;
+            width: 50%;
             margin: 0 auto;
         }
 
         label {
             display: block;
             margin-bottom: 10px;
-            font-weight: bold;
         }
 
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 22px);
+        input[type="text"] {
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -38,7 +41,7 @@
             box-sizing: border-box;
         }
 
-        input[type="submit"] {
+        button[type="submit"] {
             background-color: #0066cc;
             color: #fff;
             border: none;
@@ -50,27 +53,25 @@
             transition: background-color 0.3s;
         }
 
-        input[type="submit"]:hover {
+        button[type="submit"]:hover {
             background-color: #004999;
-        }
-
-        .message {
-            margin-top: 10px;
-            color: #cc0000;
         }
     </style>
 </head>
 <body>
-<div th:if="${param.error}" class="message">
-  Invalid username and password.
-</div>
-<div th:if="${param.logout}" class="message">
-  You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-  <div><label>User Name: <input type="text" name="username"/></label></div>
-  <div><label>Password: <input type="password" name="password"/></label></div>
-  <div><input type="submit" value="Sign In"/></div>
+<h1>Add New Task for User</h1>
+<form th:action="@{/admin-tasks-view/users/{id}/create}" th:object="${userTask}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <input type="hidden" th:field="*{task.id}" />
+    <div>
+        <label for="taskName">Task Name:</label>
+        <input type="text" id="taskName" th:field="*{task.name}" required />
+    </div>
+    <div>
+        <label for="taskDescription">Task Description:</label>
+        <input type="text" id="taskDescription" th:field="*{task.description}" required />
+    </div>
+    <button type="submit">Submit</button>
 </form>
 </body>
 </html>

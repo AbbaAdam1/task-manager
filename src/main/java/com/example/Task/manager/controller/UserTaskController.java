@@ -32,12 +32,31 @@ public class UserTaskController {
     //@GetMapping("/user")
     @GetMapping
     public String getUserTasksByLoggedInUser(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Retrieve the current user's username from the authenticated user details
+        String username = userDetails.getUsername();
+        // Retrieve the current user's tasks based on their username
+        List<UserTask> userTasks = userTaskService.getUserTasksByUsername(username);
+        // Add the user's tasks to the model
+        model.addAttribute("userTasks", userTasks);
+        // Retrieve the current user's details based on their username
+        Optional<User> currentUserOptional = userService.getUserByUsername(username);
+        // If the current user exists, add them to the model
+        if (currentUserOptional.isPresent()) {
+            User currentUser = currentUserOptional.get();
+            model.addAttribute("currentUser", currentUser);
+        }
+        // Return the view name
+        return "task-list"; // Ensure this view exists in your templates
+    }
+/*
+    @GetMapping
+    public String getUserTasksByLoggedInUser(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
         List<UserTask> userTasks = userTaskService.getUserTasksByUsername(username);
         model.addAttribute("userTasks", userTasks);
         return "task-list"; // Ensure this view exists in your templates
     }
-
+*/
     /*
     @GetMapping
     public String getAllUserTasks(Model model) {
