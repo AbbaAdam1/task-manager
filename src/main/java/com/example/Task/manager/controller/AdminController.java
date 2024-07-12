@@ -36,7 +36,7 @@ public class AdminController {
         model.addAttribute("users", users);
         return "user-list"; // Ensure this view exists in your templates
     }
-
+/*
     // fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -54,6 +54,36 @@ public class AdminController {
             return "redirect:/admin-tasks-view/users"; // Redirect to user list or handle appropriately
         }
     }
+*/
+    // Fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
+    @GetMapping("/users/{id}")
+    public String getUserById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Retrieve the user by their id
+        Optional<User> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            // Fetches user by id, retrieves their tasks, and redirects to task-list to display said tasks
+            List<UserTask> userTasks = userTaskService.getUserTasksByUserId(id);
+
+            // Retrieve the current user's details based on their username
+            Optional<User> currentUserOptional = userService.getUserByUsername(userDetails.getUsername());
+
+            // If the current user exists, add them to the model
+            if (currentUserOptional.isPresent()) {
+                User currentUser = currentUserOptional.get();
+                model.addAttribute("currentUser", currentUser);
+            }
+
+            // Add user tasks and user ID to the model
+            model.addAttribute("userTasks", userTasks);
+            model.addAttribute("userId", id); // Add userId to the model
+
+            return "task-list"; // Ensure this view exists in your templates
+        } else {
+            // Handle case where user is not found
+            return "redirect:/admin-tasks-view/users"; // Redirect to user list or handle appropriately
+        }
+    }
+
 
     //for creating a new task for an admin
     /*
@@ -75,7 +105,7 @@ public class AdminController {
         userTaskService.saveUserTask(userTask); // Save the userTask using the service
         return "redirect:/admin-tasks-view/users/" + id; // Redirect to the user's task list
     }
-
+/*
     @GetMapping("/add-task/{id}")
     public String showTaskForm(@PathVariable  Integer id, Model model) {
         // Fetch user by userId and pass it to the task-form
@@ -87,7 +117,8 @@ public class AdminController {
         model.addAttribute("task", new Task());
         return "admin-task-form";
     }
-    ///
+
+ */
 
     @GetMapping("/users/{id}/tasks")
     public String getUserTasksById(@PathVariable Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {

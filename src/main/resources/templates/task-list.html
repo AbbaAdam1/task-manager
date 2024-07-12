@@ -70,6 +70,7 @@
 </head>
 <body>
 <a th:href="@{/}" class="btn">Return to Home Page</a>
+<a th:if="${currentUser.role} == 'ADMIN'" th:href="@{/admin-tasks-view/users}" class="btn">Return to User List</a>
 
 <h1>Task List</h1>
 <!-- Check if the userTasks list is empty -->
@@ -84,7 +85,7 @@
         <tr>
             <th>Task Name</th>
             <th>Description</th>
-            <th>Actions</th>
+            <th th:if="${currentUser.role} != 'ADMIN'">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -93,15 +94,15 @@
             <td th:text="${task.task.name}"></td>
             <td th:text="${task.task.description}"></td>
             <td>
-                <a th:href="@{/tasks-view/edit/{id}(id=${task.id})}">Edit</a>
-                <a th:href="@{/tasks-view/delete/{id}(id=${task.id})}">Delete</a>
+                <a th:if="${currentUser.role} != 'ADMIN'" th:href="@{/tasks-view/edit/{id}(id=${task.id})}">Edit</a>
+                <a th:if="${currentUser.role} != 'ADMIN'" th:href="@{/tasks-view/delete/{id}(id=${task.id})}">Delete</a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
-<a th:href="@{/tasks-view/new}" class="btn">Add New Task</a>
-<a th:if="${isAdmin}" th:href="@{/admin-tasks-view/add-task/{id}(id=${id})}">Add New Task for User</a>
+<a th:if="${currentUser.role} != 'ADMIN'" th:href="@{/tasks-view/new}" class="btn">Add New Task</a>
+<!-- <a th:if="${isAdmin}" th:href="@{/admin-tasks-view/add-task/{id}(id=${id})}">Add New Task for User</a> -->
 
 </body>
 </html>
